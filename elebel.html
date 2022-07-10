@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .custom-file-input::-webkit-file-upload-button {
+        visibility: hidden;
+      }
+      .custom-file-input {
+        visibility: hidden;
+      }
+      .custom-file-input::-webkit-file-upload-button {
+        visibility: hidden;
+      }
+      .custom-file-input::before {
+        position: absolute;
+        top: 0;
+        right: -55.77px;
+        content: "Photo";
+        visibility: visible;
+        display: inline-block;
+        background: linear-gradient(top, #f9f9f9, #e3e3e3);
+        border: 1px solid #999;
+        border-radius: 3px;
+        padding: 5px 8px;
+        outline: none;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        cursor: pointer;
+        text-shadow: 1px 1px #fff;
+        font-weight: 700;
+        font-size: 10pt;
+      }
+      .custom-file-input:hover::before {
+        border-color: black;
+      }
+      .custom-file-input:active::before {
+        background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+      }
+      /* textarea effect to .div */
+      .container {
+        position: relative;
+        display: inline-block;
+      }
+      .div {
+        width: 400px;
+        height: 400px;
+        border: 1px solid #aaa;
+        padding: 10px;
+        font-size: 16px;
+        resize: none;
+      }
+      .div.active {
+        display: flex;
+        justify-content: space-between;
+      }
+      .div img {
+        width: 200px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- editable true for div -->
+    <!-- 
+        instructions:
+     -->
+    <h2>information about this app:</h2>
+    <li>you can upload multiple images</li>
+    <li>you can preview the images before uploading</li>
+    <li>You can write a description.</li>
+    <li>
+      If you want to save your photo and description, press ctrl + s to save.
+    </li>
+    <li>
+      If you already have a photo and description, you can load them by pressing
+      ctrl + L.
+    </li>
+    <li>you can try my other blog app by clicking the link below.</li>
+    <li>
+      <u>
+        <a
+          target="_blank"
+          href="https://azadsarxanli.github.io/rich-text-editor/"
+        >
+          https://azadsarxanli.github.io/rich-text-editor/
+        </a>
+      </u>
+    </li>
+
+    <div class="container">
+      <div class="div" contenteditable="true"></div>
+      <input type="file" multiple id="input" class="custom-file-input input" />
+    </div>
+    <script>
+      // make resizeable .div
+      const div = document.querySelector(".div");
+      div.style.resize = "both";
+      div.style.overflow = "auto";
+      div.style.minHeight = "100px";
+      div.style.minWidth = "100px";
+      //   if user press ctrl + s save the message to local storage
+      div.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.keyCode === 83) {
+          e.preventDefault();
+          localStorage.setItem("message", div.innerHTML);
+        }
+      });
+      //   if user press ctrl + l load the message from local storage
+      div.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.keyCode === 76) {
+          e.preventDefault();
+          div.innerHTML += localStorage.getItem("message");
+        }
+      });
+      //   preview  the multiple image in the div with template literals
+      const input = document.querySelector(".input");
+      input.addEventListener("change", function (e) {
+        const files = e.target.files;
+        // map files and return file
+        Array.from(files).map((file) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function (e) {
+            div.innerHTML += `<img src="${e.target.result}">`;
+          };
+        });
+      });
+    </script>
+  </body>
+</html>
